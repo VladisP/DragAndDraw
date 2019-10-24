@@ -2,30 +2,30 @@ package com.example.draganddraw;
 
 import android.graphics.PointF;
 
-public class Box {
+class Box {
 
     private PointF mOrigin;
     private PointF mCurrent;
 
-    public Box(PointF origin) {
+    Box(PointF origin) {
         mOrigin = origin;
         mCurrent = origin;
     }
 
-    public Box(PointF origin, PointF current) {
+    Box(PointF origin, PointF current) {
         mOrigin = origin;
         mCurrent = current;
     }
 
-    public PointF getCurrent() {
+    PointF getCurrent() {
         return mCurrent;
     }
 
-    public void setCurrent(PointF current) {
+    void setCurrent(PointF current) {
         mCurrent = current;
     }
 
-    public PointF getOrigin() {
+    PointF getOrigin() {
         return mOrigin;
     }
 }
