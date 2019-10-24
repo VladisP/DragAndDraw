@@ -12,6 +12,11 @@ public class Box {
         mCurrent = origin;
     }
 
+    public Box(PointF origin, PointF current) {
+        mOrigin = origin;
+        mCurrent = current;
+    }
+
     public PointF getCurrent() {
         return mCurrent;
     }

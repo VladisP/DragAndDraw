@@ -4,10 +4,14 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +19,8 @@ import java.util.List;
 public class BoxDrawingView extends View {
 
     private static final String TAG = "BoxDrawingView";
+    private static final String KEY_PARENT_STATE = "ParentState";
+    private static final String KEY_POINTS = "Points";
 
     private Box mCurrentBox;
     private List<Box> mBoxen = new ArrayList<>();
@@ -77,6 +83,45 @@ public class BoxDrawingView extends View {
             float top = Math.min(box.getOrigin().y, box.getCurrent().y);
             float bottom = Math.max(box.getOrigin().y, box.getCurrent().y);
             canvas.drawRect(left, top, right, bottom, mBoxPaint);
+        }
+    }
+
+    private ArrayList<PointF> getPoints() {
+        ArrayList<PointF> points = new ArrayList<>();
+        for (Box box : mBoxen) {
+            points.add(box.getOrigin());
+            points.add(box.getCurrent());
+        }
+
+        return points;
+    }
+
+    private void setPoints(ArrayList<PointF> points) {
+        for (int i = 0; i < points.size(); i += 2) {
+            Box box = new Box(points.get(i), points.get(i + 1));
+            mBoxen.add(box);
+        }
+    }
+
+    @Nullable
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle state = new Bundle();
+
+        state.putParcelable(KEY_PARENT_STATE, super.onSaveInstanceState());
+        state.putParcelableArrayList(KEY_POINTS, getPoints());
+
+        return state;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        Bundle savedState = (Bundle) state;
+        super.onRestoreInstanceState(savedState.getParcelable(KEY_PARENT_STATE));
+
+        ArrayList<PointF> points = savedState.getParcelableArrayList(KEY_POINTS);
+        if (points != null) {
+            setPoints(points);
         }
     }
 }
